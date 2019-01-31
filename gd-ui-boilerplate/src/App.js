@@ -17,7 +17,7 @@ class App extends Component {
     super(props);
 
     this.handleIncomingCityFilterChange = this.handleIncomingCityFilterChange.bind(this);
-    this.handleOutcomingCityFilterChange = this.handleOutcomingCityFilterChange.bind(this);
+    this.handleTestButtonClick = this.handleTestButtonClick.bind(this);
   }
 
   componentDidMount() {
@@ -30,6 +30,7 @@ class App extends Component {
 
   handleIncomingCityFilterChange(message) {
       // catching postMessages when embedded into pixel-perfect dashboard
+      console.log("handleIncomingCityFilterChange");
       let data;
 
       console.log(message);
@@ -53,37 +54,30 @@ class App extends Component {
       }
   }
 
-  handleOutcomingCityFilterChange(payload) {
-    const { label, values } = payload;
-
-    var postMessageStructure = {
-      gdc: {
-        setFilterContext: values.length ? values.map(value => ({
-          label,
-          type: 'attribute',
-          value: value.label
-        })) : [{
-          label,
-          type: 'attribute',
-          value: 'GDC_SELECT_ALL'
-        }]
+  handleTestButtonClick() {
+    console.log("handleTestButtonClick")
+    const message = {
+      "gdc":{
+         "setFilterContext":[
+            {
+               "label":"label.restaurantlocation.locationcity",
+               "type":"attribute",
+               "value":"Dallas"
+            }
+         ]
       }
-    };
+   };
 
-    window.parent.postMessage(JSON.stringify(postMessageStructure), '*');
+    window.parent.postMessage(JSON.stringify(
+      message,
+      ), '*');
   }
 
   render() {
     return (
       <div className="App">
         <div style={{ width: 400, margin: 'auto', marginBottom: 20, marginTop: 20 }}>
-          <AttributeDropdown
-            {...config}
-            filterGroup={FG_MAIN}
-            attribute={C.attributeDisplayForm('Location City')}
-            placeholder="Filter cities"
-            onChange={this.handleOutcomingCityFilterChange}
-          />
+        <button onClick={this.handleTestButtonClick}>Test</button>
         </div>
         <div>
           # of Location City: <Kpi
